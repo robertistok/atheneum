@@ -9,7 +9,7 @@ export const Navigation = () => {
   return (
     <Box
       sx={{
-        typography: "body1",
+        typography: "h4",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

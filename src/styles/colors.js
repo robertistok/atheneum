@@ -4,4 +4,4 @@ export const blue1 = "#056CF2";
 export const blue2 = "#05AFF2";
 export const blue3 = "#05DBF2";
 export const green = "#05F2DB";
-export const text = "#0D0D0D";
+export const text = "#0A1929";
