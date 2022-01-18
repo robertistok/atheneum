@@ -3,16 +3,17 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Mint from "./Mint";
 import Main from "./Main";
 import Explore from "./Explore";
+import { Layout } from "./Layout";
 
 const routes = [
-  { path: '/', component: Main },
-  { path: '/mint', component: Mint },
-  { path: '/explore', component: Explore },
+  { path: "/", component: Main },
+  { path: "/mint", component: Mint },
+  { path: "/explore", component: Explore },
 ];
 
 const App = () => {
   return (
-    <div className="App">
+    <Layout>
       <Router>
         <Routes>
           {routes.map((route, index) => (
@@ -25,7 +26,7 @@ const App = () => {
           ))}
         </Routes>
       </Router>
-    </div>
+    </Layout>
   );
 };
 
