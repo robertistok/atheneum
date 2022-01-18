@@ -39,7 +39,7 @@ export const Navigation = () => {
             </Link>
           </li>
           <li>
-            <Avatar />
+            <Avatar>Connect your wallet</Avatar>
           </li>
         </StyledList>
       </div>

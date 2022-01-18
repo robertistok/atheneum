@@ -40,7 +40,7 @@ const Buttons = styled("div")({
   alignItems: "center",
   ">button": {
     margin: "30px",
-    padding: "10px 20px",
+    padding: "10px 22px",
   },
 });
 
