@@ -1,11 +1,19 @@
 import * as React from "react";
+import { useAuth } from "./Layout";
+import { requestAccount } from "./Main";
+import { ethers } from "ethers";
 import Link from "@mui/material/Link";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import logo from "../assets/logo.png";
+import { green, blue1 } from "../styles/colors";
 
 export const Navigation = () => {
+  const { userId, error, setError, setUserId } = useAuth();
+  const handleClick = () => {
+    requestAccount(setError, setUserId);
+  };
+
   return (
     <Box
       sx={{
@@ -39,7 +47,11 @@ export const Navigation = () => {
             </Link>
           </li>
           <li>
-            <Avatar>Connect your wallet</Avatar>
+            {userId ? (
+              <div>{userId}</div>
+            ) : (
+              <div onClick={handleClick}>Connect your wallet</div>
+            )}
           </li>
         </StyledList>
       </div>
@@ -56,5 +68,14 @@ const StyledList = styled("ul")({
   ">li": {
     marginLeft: "20px",
     marginRight: "20px",
+    ">div": {
+      border: `solid 2px ${blue1}`,
+      borderRadius: "9999px",
+      maxWidth: "200px",
+      textOverflow: "ellipsis",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      padding: "0.5rem 1rem",
+    },
   },
 });

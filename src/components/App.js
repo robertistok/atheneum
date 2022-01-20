@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Mint from "./Mint";
-import Main from "./Main";
-import Explore from "./Explore";
+import { Main } from "./Main";
+import { Explore } from "./Explore";
 import { Layout } from "./Layout";
 
 const routes = [

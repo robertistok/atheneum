@@ -1,7 +1,48 @@
 import React from "react";
+import { Button, Typography } from "@mui/material";
+import { books } from "../assets/books";
+import styled from "@emotion/styled";
+import { purple } from "@mui/material/colors";
 
-const Explore = () => {
-  return <h1>Explore</h1>;
+export const Explore = () => {
+  return (
+    <>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <Typography variant="h1">Explore</Typography>
+        <Wrapper>
+          {books.map((book) => {
+            return (
+              <>
+                <Book>
+                  <Cover></Cover>
+                  <Typography variant="h4">{book.name}</Typography>
+                  <Button variant="outlined" size="small">
+                    Buy
+                  </Button>
+                </Book>
+              </>
+            );
+          })}
+        </Wrapper>
+      </div>
+    </>
+  );
 };
 
-export default Explore;
+const Wrapper = styled("div")({
+  display: "flex",
+  flexDirection: "row",
+  flexFlow: "wrap",
+  alignItems: "center",
+});
+
+const Book = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  marginRight:'20px'
+});
+const Cover = styled("div")({
+  height: "150px",
+  width: "170px",
+  backgroundColor: "pink",
+});

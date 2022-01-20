@@ -4,6 +4,7 @@ import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import hero from "../assets/hero.jpg";
+import { useAuth } from "./Layout";
 
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
@@ -16,6 +17,8 @@ const StyledButton = styled(Button)({
 const Wrapper = styled("div")({
   display: "grid",
   gridTemplateColumns: "40% 1fr",
+  width: "100%",
+  alignItems: "center",
 });
 const TextWrapper = styled("div")({
   display: "flex",
@@ -23,32 +26,59 @@ const TextWrapper = styled("div")({
   alignItems: "flex-start",
 });
 const ImageWrapper = styled("div")({
-  border: "solid 1px",
   borderRadius: "10px",
   overflow: "hidden",
   position: "relative",
-  ">img": {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-  },
+  backgroundImage: `url(${hero})`,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  backgroundPosition: "50% 50%",
+  minHeight: "400px",
 });
 const Buttons = styled("div")({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
+  marginTop: "10px",
+  "@media (max-width:900px)": {
+    flexDirection: "column",
+  },
   ">button": {
-    margin: "30px",
-    padding: "10px 22px",
+    marginRight: "30px",
+    marginTop: "10px",
+    padding: "10px 42px",
   },
 });
+
+const requestAccount = async (setError, setUserId) => {
+  if (typeof window.ethereum === "undefined") {
+    setError(true);
+    return;
+  }
+  const accounts = await window.ethereum.request({
+    method: "eth_requestAccounts",
+  });
+  setUserId(accounts[0]);
+  return accounts[0];
+};
 
 const Main = () => {
   const [greeting, setGreetingValue] = useState("");
   const [errorrMessage, setErrorMessage] = useState("");
+  const { error, setError, setUserId } = useAuth();
 
   const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    const user = requestAccount(setError, setUserId);
+    if (error) {
+      setErrorMessage("Please Install Metamask");
+    }
+    if (user) {
+      navigate(path);
+    }
+  };
+
   // async function getGreeting() {
   //   if (typeof window.ethereum !== "undefined") {
   //     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -66,19 +96,6 @@ const Main = () => {
   //   }
   // }
 
-  async function requestAccounts(path) {
-    if (typeof window.ethereum === "undefined") {
-      setErrorMessage("Please Install Metamask");
-      return;
-    }
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    console.log(accounts);
-    // setGreetingValue(accounts[0]);
-    navigate(path);
-  }
-
   return (
     <Wrapper>
       <TextWrapper>
@@ -89,25 +106,23 @@ const Main = () => {
         <Buttons>
           <StyledButton
             variant="contained"
-            onClick={() => requestAccounts("/explore")}
+            onClick={() => handleNavigation("/explore")}
           >
             Explore
           </StyledButton>
           <StyledButton
             variant="contained"
             color="secondary"
-            onClick={() => requestAccounts("/mint")}
+            onClick={() => handleNavigation("/mint")}
           >
             Create
           </StyledButton>
         </Buttons>
         <p>{greeting}</p>
       </TextWrapper>
-      <ImageWrapper>
-        <img src={hero} alt="books" />
-      </ImageWrapper>
+      <ImageWrapper>{/* <img src={hero} alt="books" /> */}</ImageWrapper>
     </Wrapper>
   );
 };
 
-export default Main;
+export { Main, requestAccount };
