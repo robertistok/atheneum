@@ -5,13 +5,14 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import hero from "../assets/hero.jpg";
 import { useAuth } from "./Layout";
+import { purpleDark } from "../styles/colors";
 
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 // const secret = 'audit evolve board payment aspect beauty grass brave marriage alarm critic obey'
 
 const StyledButton = styled(Button)({
-  borderRadius: "20px",
+  borderRadius: "9999px",
 });
 
 const Wrapper = styled("div")({
@@ -79,23 +80,6 @@ const Main = () => {
     }
   };
 
-  // async function getGreeting() {
-  //   if (typeof window.ethereum !== "undefined") {
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     const contract = new ethers.Contract(
-  //       greeterAddress,
-  //       Greeter.abi,
-  //       provider
-  //     );
-  //     try {
-  //       const data = await contract.greet();
-  //       console.log("data", data);
-  //     } catch (e) {
-  //       console.log("Error", e);
-  //     }
-  //   }
-  // }
-
   return (
     <Wrapper>
       <TextWrapper>
@@ -105,8 +89,17 @@ const Main = () => {
         {errorrMessage.length ? <p>{errorrMessage}</p> : null}
         <Buttons>
           <StyledButton
-            variant="contained"
+            variant="outlined"
+            color="primary"
             onClick={() => handleNavigation("/explore")}
+            sx={{
+              border: "solid 2px",
+              ":hover": {
+                border: "solid 2px",
+                backgroundColor: purpleDark,
+                color: "white",
+              },
+            }}
           >
             Explore
           </StyledButton>

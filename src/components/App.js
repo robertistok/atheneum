@@ -13,8 +13,8 @@ const routes = [
 
 const App = () => {
   return (
-    <Layout>
-      <Router>
+    <Router>
+      <Layout>
         <Routes>
           {routes.map((route, index) => (
             <Route
@@ -25,8 +25,8 @@ const App = () => {
             />
           ))}
         </Routes>
-      </Router>
-    </Layout>
+      </Layout>
+    </Router>
   );
 };
 
