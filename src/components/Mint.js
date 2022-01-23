@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { NFTStorage } from "nft.storage";
+import { mintBookNft } from "../utils/common";
 
 import {
   Button,
@@ -25,7 +26,7 @@ const StyledFormControl = styled(FormControl)({
   margin: "16px auto",
 });
 
-const Mint = () => {
+const Mint = ({ contract }) => {
   const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState({
     title: "",
@@ -54,7 +55,11 @@ const Mint = () => {
       properties: { bookFile: formState.bookFile },
     });
     setLoading(false);
-    console.log(metadata.url);
+    const url = metadata.url.split("//");
+    const URI = `https://ipfs.io/ipfs/${url[1]}`;
+    console.log("contarct", contract);
+    mintBookNft(contract, formState.quantity, formState.title, URI);
+    console.log(metadata.url, URI);
   };
 
   return (
