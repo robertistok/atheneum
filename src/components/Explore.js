@@ -1,8 +1,17 @@
 import React from "react";
-import { Button, Chip, CircularProgress, Typography } from "@mui/material";
+import {
+  Button,
+  Chip,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useAuth } from "./Layout";
+import { requestAccount } from "./Main";
+import { purpleDark } from "../styles/colors";
 
-const subjects = ["business", "love", "fantasy", "autobiographies"];
+const subjects = ["business", "love", "science_fiction", "autobiographies"];
 const url = (subject) =>
   `https://openlibrary.org/subjects/${subject}.json?ebooks=true&limit=15&details=false`;
 
@@ -10,7 +19,7 @@ export const Explore = () => {
   const [books, setBooks] = React.useState({});
   const [category, setCategory] = React.useState(subjects[0]);
   const [loading, setLoading] = React.useState(false);
-
+  const { userId, setError, setUserId } = useAuth();
   React.useEffect(() => {
     setLoading(true);
     const fetchBooks = async () =>
@@ -24,7 +33,13 @@ export const Explore = () => {
     fetchBooks();
   }, [category]);
   const { works } = books;
-  const { root, explore, wrapper, bookDiv, title, filter } = useStylesRoot();
+  const { root, explore, wrapper, bookDiv, title, filter, connect, button } =
+    useStylesRoot();
+  console.log("id", userId);
+
+  const handleClick = () => {
+    requestAccount(setError, setUserId);
+  };
 
   if (loading) return <CircularProgress />;
 
@@ -58,7 +73,7 @@ export const Explore = () => {
                     <Typography variant="h4" className={title}>
                       {book.title}
                     </Typography>
-                    <Button variant="outlined" size="small">
+                    <Button variant="outlined" size="small" className={button}>
                       Buy
                     </Button>
                   </div>
@@ -71,13 +86,25 @@ export const Explore = () => {
         </div>
         <div className={root}>
           <Typography variant="h1">My Books</Typography>
+          {userId ? (
+            <div>Your books</div>
+          ) : (
+            <Button
+              onClick={handleClick}
+              variant="outlined"
+              className={connect}
+            >
+              Connect your wallet to view your books
+            </Button>
+          )}
+          <Divider />
         </div>
       </div>
     </>
   );
 };
 
-const useStylesRoot = makeStyles({
+const useStylesRoot = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -93,14 +120,25 @@ const useStylesRoot = makeStyles({
   wrapper: {
     display: "flex",
     flexDirection: "row",
+    flexFlow: "wrap",
     alignItems: "center",
-    marginTop: "30px",
-    marginBottom: "30px",
+    justifyContent: "center",
+    margin: "30px auto",
   },
   bookDiv: {
     display: "flex",
     flexDirection: "column",
     marginRight: "40px",
+    marginBottom: "40px",
+    height: "420px",
+    width: "250px",
+    justifyContent: "space-between",
+    border: "solid 1px grey",
+    padding: "10px",
+    borderRadius: "10px",
+    "@media (max-width:768px)": {
+      width: "230px",
+    },
   },
   title: {
     wordWrap: "break-word",
@@ -109,21 +147,33 @@ const useStylesRoot = makeStyles({
   filter: {
     display: "flex",
     flexDirection: "row",
-    marginTop: "30px",
-    marginBottom: "30px",
+    marginTop: "20px",
+    marginBottom: "20px",
   },
-});
+  button: {
+    border: "2px solid",
+    borderRadius: "9999px",
+    "&:hover": {
+      border: "2px solid",
+      backgroundColor: purpleDark,
+      color: "white",
+    },
+  },
+  connect: {
+    marginTop: "30px",
+  },
+}));
 
 const useStyles = makeStyles({
   cover: {
-    height: "200px",
-    width: "180px",
+    height: "350px",
+    width: "100%",
     borderRadius: "10px",
     overflow: "hidden",
     position: "relative",
     backgroundImage: (props) => props.url,
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
     backgroundPosition: "50% 50%",
   },
 });

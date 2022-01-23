@@ -1,6 +1,5 @@
-import { red } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import { purple, purpleDark, blue1, blue2, blue3, green, text } from "./colors";
+import { purple, purpleDark, blue1, text } from "./colors";
 
 const theme = createTheme({
   typography: {
@@ -58,10 +57,6 @@ const theme = createTheme({
     secondary: {
       main: blue1,
       dark: purpleDark,
-    },
-    text: {
-      primary: red[500],
-      secondary: "white",
     },
   },
 });
