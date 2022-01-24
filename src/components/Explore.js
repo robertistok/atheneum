@@ -1,14 +1,10 @@
 import React from "react";
-import {
-  Button,
-  Chip,
-  CircularProgress,
-  Divider,
-  Typography,
-} from "@mui/material";
+import { Button, CircularProgress, Divider, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { buyBookNft } from "../utils/common";
 import { useAuth } from "./Layout";
 import { requestAccount } from "./Main";
+import { MyBooks } from "./MyBooks";
 import { purpleDark } from "../styles/colors";
 
 export const Explore = ({ contract }) => {
@@ -30,7 +26,6 @@ export const Explore = ({ contract }) => {
       const counter = await contract.bookIds();
       const counterInt = parseInt(counter._hex, 16);
       console.log("token id", counterInt, counter);
-      // setLoading(true);
 
       const allBooks = await Promise.all(
         Array(counterInt)
@@ -38,16 +33,17 @@ export const Explore = ({ contract }) => {
           .map(async (_, index) => {
             const tokenId = index;
             // const ownerOf = await contract.ownerOf(tokenId);
-            const tokenURI = await contract.tokenURI(tokenId);
-            console.log("url", tokenURI);
+            const book = await contract.books(tokenId);
+
             try {
-              const response = await (await fetch(tokenURI)).json();
+              const response = await (await fetch(book.URI)).json();
               const { name, description, properties, image } = response;
 
               const bookFileUrl = properties.bookFile.split("//");
               const coverUrl = image.split("//");
               console.log("response", response);
               return {
+                price: book.price,
                 tokenId,
                 imageUrl: `https://ipfs.io/ipfs/${coverUrl[1]}`,
                 bookFile: `https://ipfs.io/ipfs/${bookFileUrl[1]}`,
@@ -73,13 +69,15 @@ export const Explore = ({ contract }) => {
     }
   };
 
-  console.log("book", books);
-
   const { root, explore, wrapper, bookDiv, title, connect, button } =
     useStylesRoot();
 
   const handleClick = () => {
     requestAccount(setError, setUserId);
+  };
+
+  const handleBuy = ({ bookId, price }) => {
+    buyBookNft(contract, bookId, price);
   };
 
   if (loading) return <CircularProgress />;
@@ -95,11 +93,18 @@ export const Explore = ({ contract }) => {
                 return (
                   <div className={bookDiv} key={key}>
                     <Cover url={book.imageUrl}></Cover>
-                    <img src={book.imageUrl}/>
+                    <img src={book.imageUrl} />
                     <Typography variant="h4" className={title}>
                       {book.title}
                     </Typography>
-                    <Button variant="outlined" size="small" className={button}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      className={button}
+                      onClick={() =>
+                        handleBuy({ bookId: book.tokenId, price: book.price })
+                      }
+                    >
                       Buy
                     </Button>
                   </div>
@@ -109,21 +114,6 @@ export const Explore = ({ contract }) => {
               <CircularProgress />
             )}
           </div>
-        </div>
-        <div className={root}>
-          <Typography variant="h1">My Books</Typography>
-          {userId ? (
-            <div>Your books</div>
-          ) : (
-            <Button
-              onClick={handleClick}
-              variant="outlined"
-              className={connect}
-            >
-              Connect your wallet to view your books
-            </Button>
-          )}
-          <Divider />
         </div>
       </div>
     </>

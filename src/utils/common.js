@@ -107,14 +107,14 @@ export const mintBookNft = async (contract, quantity, URI, price) => {
   }
 };
 
-export const buyNft = async (contract, tokenId, price) => {
+export const buyBookNft = async (contract, tokenId, price) => {
   try {
     if (!contract) {
       return;
     }
 
-    const txn = await contract.buyNft(tokenId, {
-      value: ethers.utils.parseEther(price.toString()),
+    const txn = await contract.buy(tokenId, {
+      value: price,
     });
     await txn.wait();
   } catch (error) {

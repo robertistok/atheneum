@@ -56,6 +56,9 @@ export const Navigation = () => {
               <Link to="/explore">Explore</Link>
             </li>
             <li>
+              <Link to="/mybooks">My Books</Link>
+            </li>
+            <li>
               {userId ? (
                 <div>{userId}</div>
               ) : (
@@ -95,6 +98,18 @@ export const Navigation = () => {
                   }}
                 >
                   Explore
+                </Link>
+              </MenuItem>
+              <MenuItem key="mybooks" onClick={handleClose}>
+                <Link
+                  to="/mybooks"
+                  style={{
+                    textDecoration: "none",
+                    color: blue1,
+                    fontWeight: 500,
+                  }}
+                >
+                  My Books
                 </Link>
               </MenuItem>
               <MenuItem key="mint" onClick={handleClose}>
