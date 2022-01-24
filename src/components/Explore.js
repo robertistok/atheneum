@@ -11,31 +11,72 @@ import { useAuth } from "./Layout";
 import { requestAccount } from "./Main";
 import { purpleDark } from "../styles/colors";
 
-const subjects = ["business", "love", "science_fiction", "autobiographies"];
-const url = (subject) =>
-  `https://openlibrary.org/subjects/${subject}.json?ebooks=true&limit=15&details=false`;
-
-export const Explore = () => {
-  const [books, setBooks] = React.useState({});
-  const [category, setCategory] = React.useState(subjects[0]);
+export const Explore = ({ contract }) => {
+  const [books, setBooks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const { userId, setError, setUserId } = useAuth();
+
   React.useEffect(() => {
-    setLoading(true);
-    const fetchBooks = async () =>
-      await fetch(url(category))
-        .then((response) => response.json())
-        .then(({ name, works }) => {
-          const booksWithCover = works.filter((work) => work.cover_id !== null);
-          setBooks({ subject: name, works: booksWithCover });
-          setLoading(false);
-        });
     fetchBooks();
-  }, [category]);
-  const { works } = books;
+  }, []);
+  console.log("contract", contract);
+
+  const fetchBooks = async () => {
+    try {
+      if (!contract) {
+        return;
+      }
+
+      const counter = await contract.bookIds();
+      const counterInt = parseInt(counter._hex, 16);
+      console.log("token id", counterInt, counter);
+      // setLoading(true);
+
+      const allBooks = await Promise.all(
+        Array(counterInt)
+          .fill()
+          .map(async (_, index) => {
+            const tokenId = index;
+            // const ownerOf = await contract.ownerOf(tokenId);
+            const tokenURI = await contract.tokenURI(tokenId);
+            console.log("url", tokenURI);
+            try {
+              const response = await (await fetch(tokenURI)).json();
+              const { name, description, properties, image } = response;
+
+              const bookFileUrl = properties.bookFile.split("//");
+              const coverUrl = image.split("//");
+              console.log("response", response);
+              return {
+                tokenId,
+                imageUrl: `https://ipfs.io/ipfs/${coverUrl[1]}`,
+                bookFile: `https://ipfs.io/ipfs/${bookFileUrl[1]}`,
+                name,
+                description,
+              };
+            } catch (err) {
+              console.log("error", err);
+              return {
+                tokenId,
+                imageUrl: "https://error404.fun/img/illustrations/09@2x.png",
+                name: tokenId,
+              };
+            }
+          })
+      );
+
+      setLoading(false);
+      setBooks(allBooks);
+    } catch (error) {
+      console.log("fetchNfts error: ", error);
+      setLoading(false);
+    }
+  };
+
+  console.log("book", books);
+
   const { root, explore, wrapper, bookDiv, title, filter, connect, button } =
     useStylesRoot();
-  console.log("id", userId);
 
   const handleClick = () => {
     requestAccount(setError, setUserId);
@@ -48,28 +89,13 @@ export const Explore = () => {
       <div className={root}>
         <div className={explore}>
           <Typography variant="h1">Explore</Typography>
-          <div className={filter}>
-            {subjects.map((subject) => (
-              <Chip
-                key={subject}
-                label={subject}
-                variant={category === subject ? "contained" : "outlined"}
-                color="secondary"
-                sx={{ marginRight: "20px" }}
-                onClick={() => {
-                  setCategory(subject);
-                }}
-              />
-            ))}
-          </div>
           <div className={wrapper}>
-            {works?.length ? (
-              works.slice(0, 5).map((book) => {
+            {books?.length ? (
+              books.slice(0, 5).map((book, key) => {
                 return (
-                  <div className={bookDiv} key={book.key}>
-                    <Cover
-                      url={`url(https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg)`}
-                    ></Cover>
+                  <div className={bookDiv} key={key}>
+                    <Cover url={book.imageUrl}></Cover>
+                    <img src={book.imageUrl}/>
                     <Typography variant="h4" className={title}>
                       {book.title}
                     </Typography>

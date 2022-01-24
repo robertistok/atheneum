@@ -50,7 +50,7 @@ export const checkIfWalletIsConnected = async (setCurrentAccount) => {
       console.log("Make sure you have metamask!");
       return;
     } else {
-      console.log("We have the ethereum object", ethereum);
+      // console.log("We have the ethereum object", ethereum);
     }
 
     const accounts = await ethereum.request({ method: "eth_accounts" });
@@ -94,15 +94,13 @@ export const getTokenCount = async (contract) => {
   }
 };
 
-export const mintBookNft = async (contract, quantity, title, URI) => {
+export const mintBookNft = async (contract, quantity, URI) => {
   try {
     if (!contract) {
       return;
     }
 
-    const uri = await contract.setBaseURI(URI);
-    console.log("uri din mintAbook", uri);
-    const txn = await contract.mintABook(quantity, title);
+    const txn = await contract.mintABook(quantity, URI);
     await txn.wait();
   } catch (error) {
     console.log(error);

@@ -9,29 +9,19 @@ contract MintBook is ERC1155 {
 
     Counters.Counter public bookIds;
     string public baseURI;
-    //book title to bookId
-    mapping(string => uint256) books;
-    //book title => bookURI
-    mapping(uint => string) booksURI;
 
+    //book bookId => bookURI
+    mapping(uint256 => string) public tokensURI;
+    
     constructor() ERC1155("") {}
 
-    function _baseURI() internal view virtual returns (string memory) {
-        return baseURI;
-    }
-
-    function setBaseURI(string memory _baseURIParam) public {
-        baseURI = _baseURIParam;
-    }
-
-    function mintABook(uint256 quantity, string calldata title)
-        public
+    function mintABook(uint256 quantity, string memory URI)
+        external
         returns (uint256)
     {
         uint256 bookId = bookIds.current();
 
-        books[title] = bookId;
-        booksURI[bookId] = baseURI;
+        tokensURI[bookId] = URI;
         _mint(msg.sender, bookId, quantity, "");
 
         bookIds.increment();

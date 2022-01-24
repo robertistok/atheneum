@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import hero from "../assets/hero.jpg";
 import { useAuth } from "./Layout";
-import { purpleDark } from "../styles/colors";
+import { blue1, purpleDark } from "../styles/colors";
 
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
@@ -107,6 +107,11 @@ const Main = () => {
             variant="contained"
             color="secondary"
             onClick={() => handleNavigation("/mint")}
+            sx={{
+              border: "solid 2px",
+              borderColor: blue1,
+              ":hover": { borderColor: purpleDark },
+            }}
           >
             Create
           </StyledButton>
