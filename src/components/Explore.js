@@ -75,7 +75,7 @@ export const Explore = ({ contract }) => {
 
   console.log("book", books);
 
-  const { root, explore, wrapper, bookDiv, title, filter, connect, button } =
+  const { root, explore, wrapper, bookDiv, title, connect, button } =
     useStylesRoot();
 
   const handleClick = () => {
@@ -169,12 +169,6 @@ const useStylesRoot = makeStyles((theme) => ({
   title: {
     wordWrap: "break-word",
     maxWidth: "170px",
-  },
-  filter: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: "20px",
-    marginBottom: "20px",
   },
   button: {
     border: "2px solid",

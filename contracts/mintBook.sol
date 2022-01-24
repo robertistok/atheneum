@@ -9,23 +9,48 @@ contract MintBook is ERC1155 {
 
     Counters.Counter public bookIds;
     string public baseURI;
+    struct Book {
+        uint256 price;
+        string URI;
+        address author;
+    }
 
     //book bookId => bookURI
-    mapping(uint256 => string) public tokensURI;
-    
+    mapping(uint256 => Book) public books;
+
     constructor() ERC1155("") {}
 
-    function mintABook(uint256 quantity, string memory URI)
-        external
-        returns (uint256)
-    {
+    /**
+     * @dev Returns an URI for a given token ID
+     */
+    function tokenURI(uint256 _tokenId) public view returns (string memory) {
+        return books[_tokenId].URI;
+    }
+
+    //https://docs.soliditylang.org/en/latest/contracts.html#receive-ether-function
+    receive() external payable {}
+
+    function mintABook(
+        uint256 _quantity,
+        string memory _URI,
+        uint256 _price
+    ) external returns (uint256) {
         uint256 bookId = bookIds.current();
 
-        tokensURI[bookId] = URI;
-        _mint(msg.sender, bookId, quantity, "");
-
+        books[bookId] = Book({price: _price, URI: _URI, author: msg.sender});
+        _mint(msg.sender, bookId, _quantity, "");
         bookIds.increment();
 
         return bookId;
+    }
+
+    function buy(uint256 _bookId) public payable returns (bool) {
+        //enough eth => price
+        require(msg.value == books[_bookId].price, "Not enough eth");
+        require(msg.sender != address(0), "Cannot have zero address");
+        //transfer
+        safeTransferFrom(books[_bookId].author, msg.sender, _bookId, 1, "");
+        payable(books[_bookId].author).transfer(msg.value);
+        return true;
     }
 }

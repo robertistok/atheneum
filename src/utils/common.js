@@ -94,13 +94,13 @@ export const getTokenCount = async (contract) => {
   }
 };
 
-export const mintBookNft = async (contract, quantity, URI) => {
+export const mintBookNft = async (contract, quantity, URI, price) => {
   try {
     if (!contract) {
       return;
     }
-
-    const txn = await contract.mintABook(quantity, URI);
+    const value = ethers.utils.parseEther(price.toString());
+    const txn = await contract.mintABook(quantity, URI, value);
     await txn.wait();
   } catch (error) {
     console.log(error);
