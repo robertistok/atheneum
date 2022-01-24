@@ -58,7 +58,7 @@ const Mint = ({ contract }) => {
     const url = metadata.url.split("//");
     const URI = `https://ipfs.io/ipfs/${url[1]}`;
     console.log("contarct", contract);
-    mintBookNft(contract, formState.quantity, URI);
+    mintBookNft(contract, formState.quantity, URI, formState.priceInEth);
     console.log(metadata.url, URI);
   };
 

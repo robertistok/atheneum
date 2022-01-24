@@ -13,6 +13,7 @@ import {
 
 import abiJson from "../abis/abi.json";
 import addressJson from "../abis/address.json";
+import { MyBooks } from "./MyBooks";
 
 const routes = [
   { path: "/", component: Main },
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="/" element={<Main contract={contract} />} />
             <Route path="/mint" element={<Mint contract={contract} />} />
             <Route path="/explore" element={<Explore contract={contract} />} />
+            <Route path="/mybooks" element={<MyBooks contract={contract} />} />
           </Routes>
         </Layout>
       </Router>
