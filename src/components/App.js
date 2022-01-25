@@ -15,12 +15,6 @@ import abiJson from "../abis/abi.json";
 import addressJson from "../abis/address.json";
 import { MyBooks } from "./MyBooks";
 
-const routes = [
-  { path: "/", component: Main },
-  { path: "/mint", component: Mint },
-  { path: "/explore", component: Explore },
-];
-
 const App = () => {
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
@@ -29,14 +23,17 @@ const App = () => {
   const contractABI = abiJson.abi;
   const customTheme = createTheme(theme);
 
+  console.log(currentAccount);
+
   useEffect(() => {
     checkIfWalletIsConnected(setCurrentAccount);
     updateProviderAndContract(address, contractABI, setProvider, setContract);
   }, []);
+
   return (
     <ThemeProvider theme={customTheme}>
       <Router>
-        <Layout>
+        <Layout currentAccount={currentAccount}>
           <Routes>
             <Route path="/" element={<Main contract={contract} />} />
             <Route path="/mint" element={<Mint contract={contract} />} />

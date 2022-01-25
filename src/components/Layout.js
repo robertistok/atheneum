@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, createContext } from "react";
 import { Container } from "@mui/material";
 import { Navigation } from "./Navigation";
 import { styled } from "@mui/material/styles";
@@ -12,11 +11,13 @@ const StyledContainer = styled(Container)({
   alignItems: "center",
 });
 
-export const AuthContext = React.createContext(null);
+export const AuthContext = createContext(null);
 
-export const Layout = ({ children }) => {
-  const [userId, setUserId] = React.useState(null);
-  const [error, setError] = React.useState(false);
+export const Layout = ({ children, currentAccount }) => {
+  const [userId, setUserId] = useState();
+  const [error, setError] = useState(false);
+
+  useEffect(() => setUserId(currentAccount), [currentAccount]);
   return (
     <>
       <AuthContext.Provider value={{ userId, setUserId, error, setError }}>
@@ -27,6 +28,4 @@ export const Layout = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return React.useContext(AuthContext);
-};
+export const useAuth = () => React.useContext(AuthContext);

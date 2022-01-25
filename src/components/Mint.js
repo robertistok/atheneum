@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { NFTStorage } from "nft.storage";
-import { mintBookNft } from "../utils/common";
-
+import { useAuth } from "./Layout";
 import {
   Button,
   Typography,
@@ -12,18 +11,11 @@ import {
   FormHelperText,
 } from "@mui/material";
 
+import { mintBookNft } from "../utils/common";
+
 const client = new NFTStorage({
   token:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDgxZjQ2MDIwMzg4Q0ZBYTdlQTc1MkNCNWFCQjc2ZmZEZTNFZDZDRUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MjUyMTE5NzU2NywibmFtZSI6IkF0aGVuYWV1bSJ9.tK6sT_zmbTITfpgz74uXwuPGalCc796V28KsDc5Xi34",
-});
-
-const Root = styled("form")({
-  display: "flex",
-  flexDirection: "column",
-});
-
-const StyledFormControl = styled(FormControl)({
-  margin: "16px auto",
 });
 
 const Mint = ({ contract }) => {
@@ -36,6 +28,7 @@ const Mint = ({ contract }) => {
     quantity: "",
     priceInEth: "",
   });
+  const { userId } = useAuth();
 
   const handleInputChange = (e) => {
     setFormState((state) => ({
@@ -62,7 +55,7 @@ const Mint = ({ contract }) => {
     console.log(metadata.url, URI);
   };
 
-  return (
+  return userId ? (
     <Root onSubmit={handleUploadAndMint}>
       <Typography variant="h3" style={{ textAlign: "center", marginBottom: 8 }}>
         Mint a book
@@ -154,7 +147,18 @@ const Mint = ({ contract }) => {
         {loading ? "Minting in progress" : "Upload and mint"}
       </Button>
     </Root>
+  ) : (
+    <Typography variant="body1">Please connect your wallet first!</Typography>
   );
 };
+
+const Root = styled("form")({
+  display: "flex",
+  flexDirection: "column",
+});
+
+const StyledFormControl = styled(FormControl)({
+  margin: "16px auto",
+});
 
 export default Mint;

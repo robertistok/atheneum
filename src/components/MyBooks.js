@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, CircularProgress, Divider, Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAuth } from "./Layout";
 import { requestAccount } from "./Main";
@@ -9,10 +9,11 @@ import { BookNFT } from "./BookNFT";
 export const MyBooks = ({ contract }) => {
   const [books, setBooks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const { userId, setError, setUserId } = useAuth();
+  const { userId } = useAuth();
 
   React.useEffect(() => {
     fetchBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBooks = async () => {

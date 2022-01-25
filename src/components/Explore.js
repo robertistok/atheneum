@@ -10,10 +10,10 @@ import { purpleDark } from "../styles/colors";
 export const Explore = ({ contract }) => {
   const [books, setBooks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const { userId, setError, setUserId } = useAuth();
 
   React.useEffect(() => {
     fetchBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBooks = async () => {
@@ -39,7 +39,6 @@ export const Explore = ({ contract }) => {
 
               const bookFileUrl = properties.bookFile.split("//");
               const coverUrl = image.split("//");
-              console.log("response", response);
               return {
                 price: book.price,
                 tokenId,

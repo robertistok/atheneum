@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import logo from "../assets/logo.png";
-import { green, blue1, purpleDark } from "../styles/colors";
+import { blue1, purpleDark } from "../styles/colors";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { MenuItem, Menu, Typography, useMediaQuery } from "@mui/material";
 
 export const Navigation = () => {
-  const { userId, error, setError, setUserId } = useAuth();
+  const { userId, setError, setUserId } = useAuth();
   const handleClick = () => {
     requestAccount(setError, setUserId);
   };
