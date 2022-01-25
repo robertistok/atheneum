@@ -1,21 +1,18 @@
 import React from "react";
-import { Button, CircularProgress, Divider, Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { buyBookNft } from "../utils/common";
-import { useAuth } from "./Layout";
-import { requestAccount } from "./Main";
-import { MyBooks } from "./MyBooks";
-import { purpleDark } from "../styles/colors";
+
+import { Book } from "./Book";
 
 export const Explore = ({ contract }) => {
   const [books, setBooks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const { userId, setError, setUserId } = useAuth();
 
   React.useEffect(() => {
     fetchBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log("contract", contract);
 
   const fetchBooks = async () => {
     try {
@@ -25,7 +22,6 @@ export const Explore = ({ contract }) => {
 
       const counter = await contract.bookIds();
       const counterInt = parseInt(counter._hex, 16);
-      console.log("token id", counterInt, counter);
 
       const allBooks = await Promise.all(
         Array(counterInt)
@@ -41,7 +37,6 @@ export const Explore = ({ contract }) => {
 
               const bookFileUrl = properties.bookFile.split("//");
               const coverUrl = image.split("//");
-              console.log("response", response);
               return {
                 price: book.price,
                 tokenId,
@@ -69,12 +64,7 @@ export const Explore = ({ contract }) => {
     }
   };
 
-  const { root, explore, wrapper, bookDiv, title, connect, button } =
-    useStylesRoot();
-
-  const handleClick = () => {
-    requestAccount(setError, setUserId);
-  };
+  const { root, explore, wrapper } = useStylesRoot();
 
   const handleBuy = ({ bookId, price }) => {
     buyBookNft(contract, bookId, price);
@@ -89,27 +79,11 @@ export const Explore = ({ contract }) => {
           <Typography variant="h1">Explore</Typography>
           <div className={wrapper}>
             {books?.length ? (
-              books.slice(0, 5).map((book, key) => {
-                return (
-                  <div className={bookDiv} key={key}>
-                    <Cover url={book.imageUrl}></Cover>
-                    <img src={book.imageUrl} />
-                    <Typography variant="h4" className={title}>
-                      {book.title}
-                    </Typography>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      className={button}
-                      onClick={() =>
-                        handleBuy({ bookId: book.tokenId, price: book.price })
-                      }
-                    >
-                      Buy
-                    </Button>
-                  </div>
-                );
-              })
+              books
+                .slice(0, 5)
+                .map((book) => (
+                  <Book key={book.id} handleBuy={handleBuy} book={book} />
+                ))
             ) : (
               <CircularProgress />
             )}
@@ -137,58 +111,8 @@ const useStylesRoot = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     flexFlow: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "30px auto",
-  },
-  bookDiv: {
-    display: "flex",
-    flexDirection: "column",
-    marginRight: "40px",
-    marginBottom: "40px",
-    height: "420px",
-    width: "250px",
+    alignItems: "space-between",
     justifyContent: "space-between",
-    border: "solid 1px grey",
-    padding: "10px",
-    borderRadius: "10px",
-    "@media (max-width:768px)": {
-      width: "230px",
-    },
-  },
-  title: {
-    wordWrap: "break-word",
-    maxWidth: "170px",
-  },
-  button: {
-    border: "2px solid",
-    borderRadius: "9999px",
-    "&:hover": {
-      border: "2px solid",
-      backgroundColor: purpleDark,
-      color: "white",
-    },
-  },
-  connect: {
-    marginTop: "30px",
+    margin: "30px 0",
   },
 }));
-
-const useStyles = makeStyles({
-  cover: {
-    height: "350px",
-    width: "100%",
-    borderRadius: "10px",
-    overflow: "hidden",
-    position: "relative",
-    backgroundImage: (props) => props.url,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "50% 50%",
-  },
-});
-
-const Cover = ({ children, ...props }) => {
-  const { cover } = useStyles(props);
-  return <div className={cover}>{children}</div>;
-};

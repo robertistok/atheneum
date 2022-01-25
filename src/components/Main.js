@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { ethers } from "ethers";
+
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import hero from "../assets/hero.jpg";
 import { useAuth } from "./Layout";
 import { blue1, purpleDark } from "../styles/colors";
-
-const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 // const secret = 'audit evolve board payment aspect beauty grass brave marriage alarm critic obey'
 
@@ -64,7 +62,6 @@ const requestAccount = async (setError, setUserId) => {
 };
 
 const Main = () => {
-  const [greeting, setGreetingValue] = useState("");
   const [errorrMessage, setErrorMessage] = useState("");
   const { error, setError, setUserId } = useAuth();
 
@@ -116,9 +113,8 @@ const Main = () => {
             Create
           </StyledButton>
         </Buttons>
-        <p>{greeting}</p>
       </TextWrapper>
-      <ImageWrapper>{/* <img src={hero} alt="books" /> */}</ImageWrapper>
+      <ImageWrapper />
     </Wrapper>
   );
 };
