@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, CircularProgress, Divider, Typography } from "@mui/material";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { buyBookNft } from "../utils/common";
 import { useAuth } from "./Layout";
 import { requestAccount } from "./Main";
-import { MyBooks } from "./MyBooks";
+import { BookNFT } from "./BookNFT";
 import { purpleDark } from "../styles/colors";
 
 export const Explore = ({ contract }) => {
@@ -15,7 +15,6 @@ export const Explore = ({ contract }) => {
   React.useEffect(() => {
     fetchBooks();
   }, []);
-  console.log("contract", contract);
 
   const fetchBooks = async () => {
     try {
@@ -25,7 +24,6 @@ export const Explore = ({ contract }) => {
 
       const counter = await contract.bookIds();
       const counterInt = parseInt(counter._hex, 16);
-      console.log("token id", counterInt, counter);
 
       const allBooks = await Promise.all(
         Array(counterInt)
@@ -69,8 +67,7 @@ export const Explore = ({ contract }) => {
     }
   };
 
-  const { root, explore, wrapper, bookDiv, title, connect, button } =
-    useStylesRoot();
+  const { root, explore, wrapper, button, bookWrapper } = useStylesRoot();
 
   const handleClick = () => {
     requestAccount(setError, setUserId);
@@ -90,13 +87,13 @@ export const Explore = ({ contract }) => {
           <div className={wrapper}>
             {books?.length ? (
               books.slice(0, 5).map((book, key) => {
+                // console.log(
+                //   "price",
+                //   Web3.utils.fromWei(Number(book.price).toString(), "ether")
+                // );
                 return (
-                  <div className={bookDiv} key={key}>
-                    <Cover url={book.imageUrl}></Cover>
-                    <img src={book.imageUrl} />
-                    <Typography variant="h4" className={title}>
-                      {book.title}
-                    </Typography>
+                  <div className={bookWrapper}>
+                    <BookNFT book={book} />
                     <Button
                       variant="outlined"
                       size="small"
@@ -141,28 +138,16 @@ const useStylesRoot = makeStyles((theme) => ({
     justifyContent: "center",
     margin: "30px auto",
   },
-  bookDiv: {
+  bookWrapper: {
     display: "flex",
     flexDirection: "column",
-    marginRight: "40px",
-    marginBottom: "40px",
-    height: "420px",
-    width: "250px",
-    justifyContent: "space-between",
-    border: "solid 1px grey",
-    padding: "10px",
-    borderRadius: "10px",
-    "@media (max-width:768px)": {
-      width: "230px",
-    },
-  },
-  title: {
-    wordWrap: "break-word",
-    maxWidth: "170px",
+    alignItems: "flex-start",
+    // border: "solid 1px",
   },
   button: {
     border: "2px solid",
     borderRadius: "9999px",
+    width: "150px",
     "&:hover": {
       border: "2px solid",
       backgroundColor: purpleDark,
@@ -173,22 +158,3 @@ const useStylesRoot = makeStyles((theme) => ({
     marginTop: "30px",
   },
 }));
-
-const useStyles = makeStyles({
-  cover: {
-    height: "350px",
-    width: "100%",
-    borderRadius: "10px",
-    overflow: "hidden",
-    position: "relative",
-    backgroundImage: (props) => props.url,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "50% 50%",
-  },
-});
-
-const Cover = ({ children, ...props }) => {
-  const { cover } = useStyles(props);
-  return <div className={cover}>{children}</div>;
-};
