@@ -1,5 +1,5 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import { purple, purpleDark, blue1, text } from "./colors";
+import { purple, purpleDark, blue1 } from "./colors";
 
 const theme = createTheme({
   typography: {
@@ -10,9 +10,8 @@ const theme = createTheme({
       color: purpleDark,
     },
     body1: {
-      coor: text,
       fontSize: "1rem",
-      fontWeight: 400,
+      fontWeight: 600,
       letterSpacing: 0,
       lineHeight: 1.5,
     },
@@ -32,21 +31,11 @@ const theme = createTheme({
       letterSpacing: 0.2,
       lineHeight: 1.2,
     },
-    button: {
-      fontSize: "1rem",
-      fontWeight: 700,
-      letterSpacing: 0,
-      lineHeight: 1.75,
-      textTransform: "initial",
-    },
     h4: {
       fontSize: "1rem",
       fontWeight: 600,
       letterSpacing: 0.2,
       lineHeight: 1.5,
-    },
-    a: {
-      underline: "none",
     },
   },
   palette: {
