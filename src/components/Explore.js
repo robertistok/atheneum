@@ -1,11 +1,11 @@
 import React from "react";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { ethers } from "ethers";
+import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { buyBookNft } from "../utils/common";
-import { useAuth } from "./Layout";
-import { requestAccount } from "./Main";
-import { BookNFT } from "./BookNFT";
-import { purpleDark } from "../styles/colors";
+import addressJson from "../abis/address.json";
+
+import { Book } from "./Book";
 
 export const Explore = ({ contract }) => {
   const [books, setBooks] = React.useState([]);
@@ -32,6 +32,10 @@ export const Explore = ({ contract }) => {
             const tokenId = index;
             // const ownerOf = await contract.ownerOf(tokenId);
             const book = await contract.books(tokenId);
+            const numberOfBooks = (
+              await contract.balanceOf(addressJson.address, tokenId)
+            ).toString();
+            console.log("number", numberOfBooks);
 
             try {
               const response = await (await fetch(book.URI)).json();
@@ -41,11 +45,13 @@ export const Explore = ({ contract }) => {
               const coverUrl = image.split("//");
               return {
                 price: book.price,
+                priceEth: ethers.utils.formatEther(book.price.toString()),
                 tokenId,
                 imageUrl: `https://ipfs.io/ipfs/${coverUrl[1]}`,
                 bookFile: `https://ipfs.io/ipfs/${bookFileUrl[1]}`,
                 name,
                 description,
+                numberOfBooks,
               };
             } catch (err) {
               console.log("error", err);
@@ -66,18 +72,14 @@ export const Explore = ({ contract }) => {
     }
   };
 
-  const { root, explore, wrapper, button, bookWrapper } = useStylesRoot();
-
-  const handleClick = () => {
-    requestAccount(setError, setUserId);
-  };
+  const { root, explore, wrapper } = useStylesRoot();
 
   const handleBuy = ({ bookId, price }) => {
     buyBookNft(contract, bookId, price);
   };
 
   if (loading) return <CircularProgress />;
-
+  console.log("loading", loading);
   return (
     <>
       <div className={root}>
@@ -85,27 +87,18 @@ export const Explore = ({ contract }) => {
           <Typography variant="h1">Explore</Typography>
           <div className={wrapper}>
             {books?.length ? (
-              books.slice(0, 5).map((book, key) => {
-                // console.log(
-                //   "price",
-                //   Web3.utils.fromWei(Number(book.price).toString(), "ether")
-                // );
-                return (
-                  <div className={bookWrapper}>
-                    <BookNFT book={book} />
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      className={button}
-                      onClick={() =>
-                        handleBuy({ bookId: book.tokenId, price: book.price })
-                      }
-                    >
-                      Buy
-                    </Button>
-                  </div>
-                );
-              })
+              books
+                .slice(0, 5)
+                .map((book) => (
+                  <Book
+                    key={book.tokenId}
+                    handleBuy={handleBuy}
+                    book={book}
+                    price={book.priceEth}
+                    numberOfBooks={book.numberOfBooks}
+                    download={false}
+                  />
+                ))
             ) : (
               <CircularProgress />
             )}
@@ -133,27 +126,10 @@ const useStylesRoot = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     flexFlow: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "30px auto",
-  },
-  bookWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    // border: "solid 1px",
-  },
-  button: {
-    border: "2px solid",
-    borderRadius: "9999px",
-    width: "150px",
-    "&:hover": {
-      border: "2px solid",
-      backgroundColor: purpleDark,
-      color: "white",
+    justifyContent: "flex-start",
+    margin: "30px 0",
+    "@media (max-width:768px)": {
+      justifyContent: "center",
     },
-  },
-  connect: {
-    marginTop: "30px",
   },
 }));

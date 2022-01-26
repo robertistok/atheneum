@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import hero from "../assets/hero.jpg";
+import hero from "../assets/hero3.png";
 import { useAuth } from "./Layout";
 import { blue1, purpleDark } from "../styles/colors";
-
-// const secret = 'audit evolve board payment aspect beauty grass brave marriage alarm critic obey'
 
 const StyledButton = styled(Button)({
   borderRadius: "9999px",
@@ -18,6 +16,12 @@ const Wrapper = styled("div")({
   gridTemplateColumns: "40% 1fr",
   width: "100%",
   alignItems: "center",
+  "@media (max-width:768px)": {
+    gridTemplateColumns: "50% 1fr",
+  },
+  "@media (max-width:425px)": {
+    gridTemplateColumns: "1fr",
+  },
 });
 const TextWrapper = styled("div")({
   display: "flex",
@@ -32,7 +36,10 @@ const ImageWrapper = styled("div")({
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
   backgroundPosition: "50% 50%",
-  minHeight: "400px",
+  height: "400px",
+  "@media (max-width:425px)": {
+    marginTop: "20px",
+  },
 });
 const Buttons = styled("div")({
   display: "flex",
@@ -41,6 +48,9 @@ const Buttons = styled("div")({
   marginTop: "10px",
   "@media (max-width:900px)": {
     flexDirection: "column",
+  },
+  "@media (max-width:425px)": {
+    flexDirection: "row",
   },
   ">button": {
     marginRight: "30px",
@@ -60,7 +70,6 @@ const requestAccount = async (setError, setUserId) => {
   setUserId(accounts[0]);
   return accounts[0];
 };
-
 const Main = () => {
   const [errorrMessage, setErrorMessage] = useState("");
   const { error, setError, setUserId } = useAuth();
@@ -76,12 +85,13 @@ const Main = () => {
       navigate(path);
     }
   };
-
+  const smallScreen = useMediaQuery("(max-width:425px)");
+  const mediumScreen = useMediaQuery("(min-width:768px)");
   return (
     <Wrapper>
       <TextWrapper>
-        <Typography variant="h1">
-          Mint, explore or be part of a community
+        <Typography variant={mediumScreen ? "h1" : "h2"}>
+          A decentralized and community owned ecosystem of the written word
         </Typography>
         {errorrMessage.length ? <p>{errorrMessage}</p> : null}
         <Buttons>

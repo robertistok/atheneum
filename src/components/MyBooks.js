@@ -2,9 +2,8 @@ import React from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAuth } from "./Layout";
-import { requestAccount } from "./Main";
-import { purpleDark } from "../styles/colors";
-import { BookNFT } from "./BookNFT";
+
+import { Book } from "./Book";
 
 export const MyBooks = ({ contract }) => {
   const [books, setBooks] = React.useState([]);
@@ -75,9 +74,16 @@ export const MyBooks = ({ contract }) => {
           ) : (
             <div className={wrapper}>
               {books?.length ? (
-                books.slice(0, 5).map((book, key) => {
-                  return <BookNFT book={book} key={key} />;
-                })
+                books
+                  .slice(0, 5)
+                  .map((book) => (
+                    <Book
+                      book={book}
+                      key={book.tokenId}
+                      download={true}
+                      discord={true}
+                    />
+                  ))
               ) : (
                 <CircularProgress />
               )}
@@ -106,8 +112,11 @@ const useStylesRoot = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     flexFlow: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "30px auto",
+    alignItems: "space-between",
+    justifyContent: "flex-start",
+    margin: "30px 0",
+    "@media (max-width:768px)": {
+      justifyContent: "center",
+    },
   },
 }));

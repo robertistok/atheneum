@@ -9,6 +9,7 @@ import { blue1, purpleDark } from "../styles/colors";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { MenuItem, Menu, Typography, useMediaQuery } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 export const Navigation = () => {
   const { userId, setError, setUserId } = useAuth();
@@ -23,7 +24,8 @@ export const Navigation = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const matches = useMediaQuery("(min-width:768px)");
+  const mediumScreen = useMediaQuery("(min-width:768px)");
+  const styles = useStyles();
   return (
     <Box
       sx={{
@@ -32,42 +34,51 @@ export const Navigation = () => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingLeft: "40px",
+        paddingLeft: "20px",
         paddingRight: "20px",
       }}
     >
-      <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      >
+      <div className={styles.root}>
         <Link to="/">
           <img src={logo} alt="logo" />
         </Link>
-        <Typography variant="h2" sx={{ marginLeft: "20px" }}>
-          Athenaeum
-        </Typography>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <Typography variant="h2" sx={{ marginLeft: "20px" }}>
+            Athenaeum
+          </Typography>
+        </Link>
       </div>
       <div>
-        {matches ? (
-          <StyledList>
-            <li>
+        {mediumScreen ? (
+          <ul className={styles.nav}>
+            <li className={styles.navItem}>
               <Link to="/mint">Create</Link>
             </li>
-            <li>
+            <li className={styles.navItem}>
               <Link to="/explore">Explore</Link>
             </li>
-            <li>
+            <li className={styles.navItem}>
               <Link to="/mybooks">My Books</Link>
             </li>
             <li>
               {userId ? (
-                <div>{userId}</div>
+                <div className={styles.user}>{userId}</div>
               ) : (
-                <div onClick={handleClick}>Connect your wallet</div>
+                <div className={styles.user} onClick={handleClick}>
+                  Connect your wallet
+                </div>
               )}
             </li>
-          </StyledList>
+          </ul>
         ) : (
-          <div>
+          <div className={styles.nav}>
+            {userId ? (
+              <div className={styles.user}>{userId}</div>
+            ) : (
+              <div className={styles.user} onClick={handleClick}>
+                Connect your wallet
+              </div>
+            )}
             <IconButton
               aria-label="more"
               id="long-button"
@@ -132,16 +143,23 @@ export const Navigation = () => {
   );
 };
 
-const StyledList = styled("ul")({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-end",
-  alignItems: "center",
-  listStyle: "none",
-  ">li": {
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  nav: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    listStyle: "none",
+  },
+  navItem: {
     marginLeft: "20px",
     marginRight: "20px",
-    ">a": {
+    "& >a": {
       underline: "none",
       textDecoration: "none",
       color: blue1,
@@ -149,20 +167,26 @@ const StyledList = styled("ul")({
         color: purpleDark,
       },
     },
-    ">div": {
-      border: `solid 2px ${blue1}`,
-      borderRadius: "9999px",
-      maxWidth: "200px",
-      textOverflow: "ellipsis",
-      overflow: "hidden",
-      whiteSpace: "nowrap",
-      padding: "0.5rem 1rem",
-      cursor: "pointer",
-      ":hover": {
-        backgroundColor: purpleDark,
-        color: "white",
-        borderColor: purpleDark,
-      },
+  },
+  user: {
+    border: `solid 2px ${blue1}`,
+    borderRadius: "9999px",
+    maxWidth: "200px",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    padding: "0.5rem 1rem",
+    cursor: "pointer",
+    ":hover": {
+      backgroundColor: purpleDark,
+      color: "white",
+      borderColor: purpleDark,
+    },
+    "@media (max-width:768px)": {
+      width: "150px",
+    },
+    "@media (max-width:425px)": {
+      width: "50px",
     },
   },
 });
