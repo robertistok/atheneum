@@ -76,7 +76,14 @@ export const MyBooks = ({ contract }) => {
               {books?.length ? (
                 books
                   .slice(0, 5)
-                  .map((book) => <Book book={book} key={book.tokenId} />)
+                  .map((book) => (
+                    <Book
+                      book={book}
+                      key={book.tokenId}
+                      download={true}
+                      discord={true}
+                    />
+                  ))
               ) : (
                 <CircularProgress />
               )}
@@ -106,7 +113,10 @@ const useStylesRoot = makeStyles((theme) => ({
     flexDirection: "row",
     flexFlow: "wrap",
     alignItems: "space-between",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     margin: "30px 0",
+    "@media (max-width:768px)": {
+      justifyContent: "center",
+    },
   },
 }));

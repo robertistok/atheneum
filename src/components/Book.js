@@ -1,11 +1,19 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { Typography, Button } from "@mui/material";
+import { blue1, blue2, purpleDark } from "../styles/colors";
+import discordIcon from "../assets/discord.png";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
-import { purpleDark } from "../styles/colors";
-
-export const Book = ({ book, handleBuy }) => {
-  const { bookDiv, title, button } = useStylesRoot();
+export const Book = ({
+  book,
+  handleBuy,
+  price,
+  numberOfBooks,
+  download,
+  discord,
+}) => {
+  const { bookDiv, title, button, downloadLink } = useStylesRoot();
 
   return (
     <div className={bookDiv}>
@@ -13,6 +21,16 @@ export const Book = ({ book, handleBuy }) => {
         {book.name}
       </Typography>
       <Cover url={book.imageUrl}></Cover>
+      {price ? (
+        <Typography variant="body1" gutterBottom>
+          Price: {price} ♦
+        </Typography>
+      ) : null}
+      {numberOfBooks ? (
+        <Typography variant="body2" gutterBottom>
+          {numberOfBooks} 📚 available
+        </Typography>
+      ) : null}
       {handleBuy ? (
         <Button
           variant="outlined"
@@ -20,8 +38,32 @@ export const Book = ({ book, handleBuy }) => {
           className={button}
           onClick={() => handleBuy({ bookId: book.tokenId, price: book.price })}
         >
-          Buy
+          <Typography variant="body1">Buy</Typography>
         </Button>
+      ) : null}
+      {download ? (
+        <a
+          href={book.bookFile}
+          download
+          rel="noreferrer"
+          target="_blank"
+          className={`${downloadLink} ${button}`}
+        >
+          <Typography variant="body1">Download</Typography>
+          <CloudDownloadIcon fontSize="medium" color="secondary" />
+        </a>
+      ) : null}
+      {discord ? (
+        <a
+          href={book.bookFile}
+          // download
+          rel="noreferrer"
+          target="_blank"
+          className={`${downloadLink} ${button}`}
+        >
+          <Typography variant="body1">Discord</Typography>
+          <img src={discordIcon} alt="discord" />
+        </a>
       ) : null}
     </div>
   );
@@ -32,6 +74,7 @@ const useStylesRoot = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     margin: "20px",
+    marginLeft: "0px",
     height: "420px",
     width: "250px",
     justifyContent: "space-between",
@@ -39,7 +82,7 @@ const useStylesRoot = makeStyles((theme) => ({
     padding: "10px",
     borderRadius: "10px",
     "@media (max-width:768px)": {
-      width: "230px",
+      width: "250px",
     },
   },
   title: {
@@ -47,13 +90,28 @@ const useStylesRoot = makeStyles((theme) => ({
     maxWidth: "170px",
     padding: "5px 0",
   },
+  downloadLink: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    textDecoration: "none",
+    justifyContent: "center",
+    "&> img,svg": {
+      width: "20px",
+      height: "20px",
+      marginLeft: "10px",
+    },
+  },
   button: {
-    border: "2px solid",
-    borderRadius: "9999px",
+    border: "1px solid grey",
+    borderRadius: "5px",
+    padding: "5px 8px",
+    margin: "5px",
+    willChange: "transform",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+    transition: "box-shadow 0.3s ease-in-out",
     "&:hover": {
-      border: "2px solid",
-      backgroundColor: purpleDark,
-      color: "white",
+      boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
     },
   },
   connect: {
@@ -78,6 +136,5 @@ const useStyles = makeStyles({
 
 const Cover = ({ children, ...props }) => {
   const { cover } = useStyles(props);
-  console.log(cover);
   return <div className={cover}>{children}</div>;
 };
