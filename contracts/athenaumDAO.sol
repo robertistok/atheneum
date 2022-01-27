@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract AthenaeumDAO {
-    address public bookMintAddress;
+    address public bookMintAddress = 0x6D310E272eBf24F97942C517B7A4C5e251D1745C;
     address owner;
     //mapping of address to balance
     mapping(address => uint256) public balance;

@@ -9,8 +9,8 @@ import "./bookToken.sol";
 
 contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
     using Counters for Counters.Counter;
-    address public dao = 0x50d8Cdc273368C49106a8B5d3e4F6047F001DFC0;
-    address public bookToken = 0x9bC592F6FA94d2fb98bdB292a6D9cc51DaEE4B3D;
+    address public dao = 0x47b0C27eCD1889C800107Dc8D3a43B9cA2Ca96b8;
+    address public bookToken = 0x5CA94e11D6167268C763F164567Cd08e8F3DB8D0;
     address owner;
 
     Counters.Counter public bookIds;
@@ -88,7 +88,7 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
         );
         payable(dao).transfer(uint256((msg.value * 2) / 100));
         //Call bookToken mint function to send goverannce tokens to buyer
-        // BookToken(payable(bookToken)).mintForBookBuyer(1 ether, msg.sender);
+        BookToken(payable(bookToken)).mintForBookBuyer(1 ether, msg.sender);
 
         return true;
     }
