@@ -12,7 +12,7 @@ import {
 } from "../utils/common";
 
 import abiJson from "../abis/abi.json";
-import addressJson from "../abis/address.json";
+import addressJson from "../abis/MintBook_address.json";
 import { MyBooks } from "./MyBooks";
 
 const App = () => {
