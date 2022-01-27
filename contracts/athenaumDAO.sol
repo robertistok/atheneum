@@ -62,8 +62,3 @@ constructor () {
         return bookTokenAddress;
     }
 }
-
-
-
-
-}
