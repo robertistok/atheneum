@@ -5,9 +5,13 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/interfaces/IERC2981.sol";
+import "./bookToken.sol";
 
 contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
     using Counters for Counters.Counter;
+    BookToken bookToken;
+    address public dao;
+    address owner;
 
     Counters.Counter public bookIds;
     struct Book {
@@ -21,7 +25,16 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
     //buyer => array of books
     mapping(address => uint256[]) internal booksOwnedByUser;
 
-    constructor() ERC1155("") {}
+    constructor() ERC1155("") {
+
+        owner = msg.sender;
+    }
+
+
+            modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
 
     /**
      * @dev Returns an URI for a given token ID
@@ -69,14 +82,18 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
         require(msg.value >= books[_bookId].price, "Not enough eth");
         require(msg.sender != address(0), "Cannot have zero address");
         //transfer
-        _safeTransferFrom(address(this), msg.sender, _bookId, 1, "");
+        safeTransferFrom(address(this), msg.sender, _bookId, 1, "");
+        //transferFrom(address(this), msg.sender, _bookId, 1, "");
         booksOwnedByUser[msg.sender].push(_bookId);
         payable(books[_bookId].author).transfer(
             uint256((msg.value * 98) / 100)
         );
-        //  payable(daoContract).transfer(
-        //     uint256((msg.value * 2) / 100)
-        // );
+        payable(dao).transfer(
+            uint256((msg.value * 2) / 100)
+        );
+        //Call bookToken mint function to send goverannce tokens to buyer
+        bookToken.mintForBookBuyer(1 ether, msg.sender);
+
         return true;
     }
 
@@ -98,4 +115,18 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
         // 10%
         return (recipient, (_salePrice * 1000) / 10000);
     }
+
+    function setBookTokenContract(BookToken _tokenAddress) external onlyOwner {
+        bookToken = _tokenAddress;
+    }
+
+    function getBookTokenContract() external view onlyOwner returns (BookToken) {
+        return bookToken;
+    }
+
+
+    function setDaoContract(address _address) external onlyOwner {
+        dao = _address;
+    }
+
 }
