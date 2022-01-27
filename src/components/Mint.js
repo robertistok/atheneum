@@ -18,16 +18,18 @@ const client = new NFTStorage({
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDgxZjQ2MDIwMzg4Q0ZBYTdlQTc1MkNCNWFCQjc2ZmZEZTNFZDZDRUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MjUyMTE5NzU2NywibmFtZSI6IkF0aGVuYWV1bSJ9.tK6sT_zmbTITfpgz74uXwuPGalCc796V28KsDc5Xi34",
 });
 
+const initialState = {
+  title: "",
+  description: "",
+  coverFile: { name: "" },
+  bookFile: { name: "" },
+  quantity: "",
+  priceInEth: "",
+};
+
 const Mint = ({ contract }) => {
   const [loading, setLoading] = useState(false);
-  const [formState, setFormState] = useState({
-    title: "",
-    description: "",
-    coverFile: { name: "" },
-    bookFile: { name: "" },
-    quantity: "",
-    priceInEth: "",
-  });
+  const [formState, setFormState] = useState(initialState);
   const { userId } = useAuth();
 
   const handleInputChange = (e) => {
@@ -50,9 +52,13 @@ const Mint = ({ contract }) => {
     setLoading(false);
     const url = metadata.url.split("//");
     const URI = `https://ipfs.io/ipfs/${url[1]}`;
-    console.log("contarct", contract);
-    mintBookNft(contract, formState.quantity, URI, formState.priceInEth);
-    console.log(metadata.url, URI);
+    mintBookNft({
+      contract,
+      quantity: formState.quantity,
+      URI,
+      price: formState.priceInEth,
+      resetState: () => setFormState(initialState),
+    });
   };
 
   return userId ? (

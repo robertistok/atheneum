@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract bookToken is ERC20 {
+contract BookToken is ERC20 {
     uint256 initialSupply;
     address owner;
     address mintBookContract;

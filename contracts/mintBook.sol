@@ -10,7 +10,6 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
     using Counters for Counters.Counter;
 
     Counters.Counter public bookIds;
-    string public baseURI;
     struct Book {
         uint256 price;
         string URI;
@@ -75,6 +74,9 @@ contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
         payable(books[_bookId].author).transfer(
             uint256((msg.value * 98) / 100)
         );
+        //  payable(daoContract).transfer(
+        //     uint256((msg.value * 2) / 100)
+        // );
         return true;
     }
 

@@ -70,18 +70,19 @@ export const MyBooks = ({ contract }) => {
         <div className={explore}>
           <Typography variant="h1">MyBooks</Typography>
           {books.length === 0 && !loading ? (
-            <p>no books</p>
+            <Typography variant="body1">You have no books yet</Typography>
           ) : (
             <div className={wrapper}>
               {books?.length ? (
                 books
                   .slice(0, 5)
-                  .map((book) => (
+                  .map((book, index) => (
                     <Book
                       book={book}
-                      key={book.tokenId}
+                      key={`${book.tokenId}-${index}`}
                       download={true}
                       discord={true}
+                      type="mybooks"
                     />
                   ))
               ) : (

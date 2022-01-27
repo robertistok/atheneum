@@ -1,19 +1,14 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { Typography, Button } from "@mui/material";
-import { blue1, blue2, purpleDark } from "../styles/colors";
+
 import discordIcon from "../assets/discord.png";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import addressJson from "../abis/address.json";
 
-export const Book = ({
-  book,
-  handleBuy,
-  price,
-  numberOfBooks,
-  download,
-  discord,
-}) => {
+export const Book = ({ book, handleBuy, download, discord, type }) => {
   const { bookDiv, title, button, downloadLink } = useStylesRoot();
+  const { priceEth, numberOfBooks } = book;
 
   return (
     <div className={bookDiv}>
@@ -21,50 +16,74 @@ export const Book = ({
         {book.name}
       </Typography>
       <Cover url={book.imageUrl}></Cover>
-      {price ? (
+      <Typography variant="body2" className={title}>
+        {book.description}
+      </Typography>
+      {priceEth ? (
         <Typography variant="body1" gutterBottom>
-          Price: {price} ♦
+          Price: {priceEth} ♦
         </Typography>
       ) : null}
-      {numberOfBooks ? (
-        <Typography variant="body2" gutterBottom>
-          {numberOfBooks} 📚 available
-        </Typography>
-      ) : null}
-      {handleBuy ? (
-        <Button
-          variant="outlined"
-          size="small"
-          className={button}
-          onClick={() => handleBuy({ bookId: book.tokenId, price: book.price })}
-        >
-          <Typography variant="body1">Buy</Typography>
-        </Button>
-      ) : null}
-      {download ? (
-        <a
-          href={book.bookFile}
-          download
-          rel="noreferrer"
-          target="_blank"
-          className={`${downloadLink} ${button}`}
-        >
-          <Typography variant="body1">Download</Typography>
-          <CloudDownloadIcon fontSize="medium" color="secondary" />
-        </a>
-      ) : null}
-      {discord ? (
-        <a
-          href={book.bookFile}
-          // download
-          rel="noreferrer"
-          target="_blank"
-          className={`${downloadLink} ${button}`}
-        >
-          <Typography variant="body1">Discord</Typography>
-          <img src={discordIcon} alt="discord" />
-        </a>
-      ) : null}
+
+      {type === "market" ? (
+        <>
+          {numberOfBooks ? (
+            <Typography variant="body2" gutterBottom>
+              {numberOfBooks > 0
+                ? `${numberOfBooks} 📚 available`
+                : "Sold out!!"}
+            </Typography>
+          ) : null}
+          <Button
+            variant="outlined"
+            size="small"
+            className={button}
+            {...(numberOfBooks > 0
+              ? {
+                  onClick: () =>
+                    handleBuy({ bookId: book.tokenId, price: book.price }),
+                }
+              : {
+                  component: "a",
+                  href: `https://testnets.opensea.io/assets/${addressJson.address}/${book.tokenId}`,
+                  target: "_blank",
+                })}
+          >
+            {numberOfBooks > 0 ? (
+              <Typography variant="body1">Buy</Typography>
+            ) : (
+              "Buy it on Opensea"
+            )}
+          </Button>
+        </>
+      ) : (
+        <>
+          {download ? (
+            <a
+              href={book.bookFile}
+              download
+              rel="noreferrer"
+              target="_blank"
+              className={`${downloadLink} ${button}`}
+            >
+              <Typography variant="body1">Download</Typography>
+              <CloudDownloadIcon fontSize="medium" color="secondary" />
+            </a>
+          ) : null}
+          {discord ? (
+            <a
+              href={book.bookFile}
+              // download
+              rel="noreferrer"
+              target="_blank"
+              className={`${downloadLink} ${button}`}
+            >
+              <Typography variant="body1">Discord</Typography>
+              <img src={discordIcon} alt="discord" />
+            </a>
+          ) : null}
+        </>
+      )}
     </div>
   );
 };
@@ -72,6 +91,7 @@ export const Book = ({
 const useStylesRoot = makeStyles((theme) => ({
   bookDiv: {
     display: "flex",
+    flex: 1,
     flexDirection: "column",
     margin: "20px",
     marginLeft: "0px",

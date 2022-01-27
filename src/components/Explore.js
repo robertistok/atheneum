@@ -14,7 +14,7 @@ export const Explore = ({ contract }) => {
   React.useEffect(() => {
     fetchBooks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [contract]);
 
   const fetchBooks = async () => {
     try {
@@ -22,6 +22,7 @@ export const Explore = ({ contract }) => {
         return;
       }
 
+      setLoading(true);
       const counter = await contract.bookIds();
       const counterInt = parseInt(counter._hex, 16);
 
@@ -35,7 +36,6 @@ export const Explore = ({ contract }) => {
             const numberOfBooks = (
               await contract.balanceOf(addressJson.address, tokenId)
             ).toString();
-            console.log("number", numberOfBooks);
 
             try {
               const response = await (await fetch(book.URI)).json();
@@ -79,28 +79,33 @@ export const Explore = ({ contract }) => {
   };
 
   if (loading) return <CircularProgress />;
-  console.log("loading", loading);
+
   return (
     <>
       <div className={root}>
         <div className={explore}>
           <Typography variant="h1">Explore</Typography>
           <div className={wrapper}>
-            {books?.length ? (
-              books
-                .slice(0, 5)
-                .map((book) => (
-                  <Book
-                    key={book.tokenId}
-                    handleBuy={handleBuy}
-                    book={book}
-                    price={book.priceEth}
-                    numberOfBooks={book.numberOfBooks}
-                    download={false}
-                  />
-                ))
+            {books.length === 0 && !loading ? (
+              <Typography variant="body1">Books coming soon</Typography>
             ) : (
-              <CircularProgress />
+              <div className={wrapper}>
+                {books?.length ? (
+                  books
+                    .slice(0, 5)
+                    .map((book) => (
+                      <Book
+                        key={book.tokenId}
+                        handleBuy={handleBuy}
+                        book={book}
+                        download={false}
+                        type="market"
+                      />
+                    ))
+                ) : (
+                  <CircularProgress />
+                )}
+              </div>
             )}
           </div>
         </div>
