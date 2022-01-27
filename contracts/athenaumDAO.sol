@@ -31,11 +31,13 @@ constructor () {
     }
 
 
-    function deposit(uint256 _amount) public bookMintAddressOnly
+
+
+    function deposit(uint256 _amount) public payable bookMintAddressOnly
     {
 
         require(_amount > 0, "Enter valid amount");
-        token.transferFrom(msg.sender, address(this), _amount);
+        require(msg.value == _amount, "eth should equal to amount");
         balance[msg.sender]+= _amount;
 
     } 
