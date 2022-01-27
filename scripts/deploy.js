@@ -36,7 +36,7 @@ function saveFrontendFiles(contractName, contractAddress) {
     const artifact = artifacts.readArtifactSync(contractName);
 
     fs.writeFileSync(
-        contractsDir + "/abi.json",
+        contractsDir + "/" +  contractName +"_abi.json",
         JSON.stringify(artifact, null, 2)
     );
 }
