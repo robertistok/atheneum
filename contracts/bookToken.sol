@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract BookToken is ERC20 {
     uint256 initialSupply;
     address owner;
-    address mintBookContract;
+    address mintBookContract = 0x6D310E272eBf24F97942C517B7A4C5e251D1745C;
 
     constructor() ERC20("Book", "Book") {
         owner = msg.sender;
