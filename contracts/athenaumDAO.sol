@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract AthenaeumDAO {
 
     ERC20 token;
-    address bookTokenAddress;
+    address bookMintAddress;
     address owner;
     //mapping of address to balance
     mapping(address => uint256) public balance;
@@ -25,13 +25,13 @@ constructor () {
     }
 
 
-    modifier bookTokenAddressOnly() {
-        require(msg.sender == bookTokenAddress);
+    modifier bookMintAddressOnly() {
+        require(msg.sender == bookMintAddress);
         _;
     }
 
 
-    function deposit(uint256 _amount) public bookTokenAddressOnly
+    function deposit(uint256 _amount) public bookMintAddressOnly
     {
 
         require(_amount > 0, "Enter valid amount");
@@ -52,13 +52,13 @@ constructor () {
     }
 
     //set the address for the book token contract and set the erc20 book token
-    function setBookTokenContract(address _address) external onlyOwner {
-        bookTokenAddress = _address;
-        token =  ERC20(bookTokenAddress);
+    function setBookMintContract(address _address) external onlyOwner {
+        bookMintAddress = _address;
+        token =  ERC20(bookMintAddress);
      
     }
 
-    function getBookTokenContract() external view onlyOwner returns (address) {
-        return bookTokenAddress;
+    function getBookMintContract() external view onlyOwner returns (address) {
+        return bookMintAddress;
     }
 }
