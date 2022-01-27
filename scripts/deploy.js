@@ -1,9 +1,9 @@
 const hre = require("hardhat");
 
 async function main() {
-  await deploy_contracts("MintBook");
+  //await deploy_contracts("MintBook");
   await deploy_contracts("BookToken");
-  await deploy_contracts("AthenaeumDAO");
+  //await deploy_contracts("AthenaeumDAO");
 }
 async function deploy_contracts(contractName) {
   const [deployer] = await hre.ethers.getSigners();
