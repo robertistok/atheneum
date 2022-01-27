@@ -14,7 +14,6 @@ contract AthenaeumDAO {
     //contructor to set token type accepted by the vault
 constructor () {
 
-       token =  ERC20(bookTokenAddress);
        owner = msg.sender;
 
     }
@@ -51,5 +50,20 @@ constructor () {
 
 
     }
+
+    //set the address for the book token contract
+    function setBookTokenContract(address _address) external onlyOwner {
+        bookTokenAddress = _address;
+        token =  ERC20(bookTokenAddress);
+     ;
+    }
+
+    function getBookTokenContract() external view onlyOwner returns (address) {
+        return bookTokenAddress;
+    }
+}
+
+
+
 
 }
