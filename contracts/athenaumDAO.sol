@@ -47,7 +47,7 @@ constructor () {
 
         require(_amount > 0, "Enter valid amount");
         require(_amount <= balance[msg.sender], "Withdrawal amount too high");
-        token.transferFrom(address(this),msg.sender, _amount);
+        payable(msg.sender).transfer(_amount);
         balance[msg.sender]-= _amount;
 
 
