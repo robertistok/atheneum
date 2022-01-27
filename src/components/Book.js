@@ -4,7 +4,8 @@ import { Typography, Button } from "@mui/material";
 
 import discordIcon from "../assets/discord.png";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import addressJson from "../abis/address.json";
+import addressJson from "../abis/MintBook_address.json";
+
 
 export const Book = ({ book, handleBuy, download, discord, type }) => {
   const { bookDiv, title, button, downloadLink } = useStylesRoot();

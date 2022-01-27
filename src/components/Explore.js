@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { buyBookNft } from "../utils/common";
-import addressJson from "../abis/address.json";
+import addressJson from "../abis/MintBook_address.json";
 
 import { Book } from "./Book";
 
