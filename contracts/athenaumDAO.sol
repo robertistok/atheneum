@@ -55,7 +55,7 @@ constructor () {
     function setBookTokenContract(address _address) external onlyOwner {
         bookTokenAddress = _address;
         token =  ERC20(bookTokenAddress);
-     ;
+     
     }
 
     function getBookTokenContract() external view onlyOwner returns (address) {
