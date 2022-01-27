@@ -51,7 +51,7 @@ constructor () {
 
     }
 
-    //set the address for the book token contract
+    //set the address for the book token contract and set the erc20 book token
     function setBookTokenContract(address _address) external onlyOwner {
         bookTokenAddress = _address;
         token =  ERC20(bookTokenAddress);
