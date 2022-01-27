@@ -11,7 +11,7 @@ import {
   checkIfWalletIsConnected,
 } from "../utils/common";
 
-import abiJson from "../abis/abi.json";
+import abiJson from "../abis/MintBook_abi.json";
 import addressJson from "../abis/MintBook_address.json";
 import { MyBooks } from "./MyBooks";
 
