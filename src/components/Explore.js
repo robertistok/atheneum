@@ -91,17 +91,15 @@ export const Explore = ({ contract }) => {
             ) : (
               <div className={wrapper}>
                 {books?.length ? (
-                  books
-                    .slice(0, 5)
-                    .map((book) => (
-                      <Book
-                        key={book.tokenId}
-                        handleBuy={handleBuy}
-                        book={book}
-                        download={false}
-                        type="market"
-                      />
-                    ))
+                  books.map((book) => (
+                    <Book
+                      key={book.tokenId}
+                      handleBuy={handleBuy}
+                      book={book}
+                      download={false}
+                      type="market"
+                    />
+                  ))
                 ) : (
                   <CircularProgress />
                 )}
