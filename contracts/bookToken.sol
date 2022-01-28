@@ -27,7 +27,8 @@ contract BookToken is ERC20 {
         teamMember4 = 0xF426238081859800897A412B10043AAddDF2117e;
         teamMember5 = 0x36b28dd1Bf3a9328b0Ce8b4E376FD1C4C99d23ba;
 
-        teamAmount = teamAmount / 2;
+        teamAmount = initialSupply / 10;
+        teamAmount = teamAmount / 5;
         communityAmount = (initialSupply * 9) / 10;
 
 
