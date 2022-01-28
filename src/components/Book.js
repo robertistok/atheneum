@@ -6,7 +6,6 @@ import discordIcon from "../assets/discord.png";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import addressJson from "../abis/MintBook_address.json";
 
-
 export const Book = ({ book, handleBuy, download, discord, type }) => {
   const { bookDiv, title, button, downloadLink } = useStylesRoot();
   const { priceEth, numberOfBooks } = book;
@@ -73,8 +72,7 @@ export const Book = ({ book, handleBuy, download, discord, type }) => {
           ) : null}
           {discord ? (
             <a
-              href={book.bookFile}
-              // download
+              href="https://discord.gg/yVq2UVsRRd"
               rel="noreferrer"
               target="_blank"
               className={`${downloadLink} ${button}`}
@@ -97,13 +95,14 @@ const useStylesRoot = makeStyles((theme) => ({
     margin: "20px",
     marginLeft: "0px",
     height: "420px",
-    width: "250px",
+    minWidth: "250px",
+    maxWidth: "250px",
     justifyContent: "space-between",
     border: "solid 1px grey",
     padding: "10px",
     borderRadius: "10px",
     "@media (max-width:768px)": {
-      width: "250px",
+      width: "350px",
     },
   },
   title: {

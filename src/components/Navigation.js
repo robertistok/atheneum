@@ -3,7 +3,6 @@ import { useAuth } from "./Layout";
 import { requestAccount } from "./Main";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import logo from "../assets/logo.png";
 import { blue1, purpleDark } from "../styles/colors";
 import IconButton from "@mui/material/IconButton";
@@ -44,7 +43,7 @@ export const Navigation = () => {
         </Link>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Typography variant="h2" sx={{ marginLeft: "20px" }}>
-            Athenaeum
+            Bookstore on chain
           </Typography>
         </Link>
       </div>

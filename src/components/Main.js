@@ -85,7 +85,6 @@ const Main = () => {
       navigate(path);
     }
   };
-  const smallScreen = useMediaQuery("(max-width:425px)");
   const mediumScreen = useMediaQuery("(min-width:768px)");
   return (
     <Wrapper>
