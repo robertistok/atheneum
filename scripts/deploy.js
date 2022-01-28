@@ -1,20 +1,37 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  //await deploy_contracts("MintBook");
-  await deploy_contracts("BookToken");
-  //await deploy_contracts("AthenaeumDAO");
+  const mintBookAddress = await deploy_contracts("MintBook");
+  const bookTokenAddress = await deploy_contracts("BookToken");
+  const athenaeumDAOAddress = await deploy_contracts("AthenaeumDAO");
+
+  const mintBookContract = await (
+    await ethers.getContractFactory("MintBook")
+  ).attach(mintBookAddress);
+
+  const bookTokenContract = await (
+    await ethers.getContractFactory("BookToken")
+  ).attach(bookTokenAddress);
+
+  const athenaeumDAOContract = await (
+    await ethers.getContractFactory("AthenaeumDAO")
+  ).attach(athenaeumDAOAddress);
+
+  await mintBookContract.setBookTokenContract(bookTokenContract.address);
+  await mintBookContract.setDaoContract(athenaeumDAOContract.address);
+  await bookTokenContract.setDaoContract(athenaeumDAOContract.address);
+  await bookTokenContract.setMintBookContract(mintBookContract.address);
+  await athenaeumDAOContract.setBookMintContract(mintBookContract.address);
 }
 async function deploy_contracts(contractName) {
-  const [deployer] = await hre.ethers.getSigners();
-
-  const factoryOutput = await hre.ethers.getContractFactory(contractName);
+  const factoryOutput = await ethers.getContractFactory(contractName);
   const contract = await factoryOutput.deploy();
 
   await contract.deployed();
   console.log("Contract address:", contractName, " ", contract.address);
 
   saveFrontendFiles(contractName, contract.address);
+  return contract.address;
 }
 
 function saveFrontendFiles(contractName, contractAddress) {

@@ -12,7 +12,7 @@ contract BookToken is ERC20 {
     address teamMember2;
     address teamMember3;
     address teamMember4;
-    address teamMember5; 
+    address teamMember5;
     uint256 teamAmount;
     uint256 communityAmount;
 
@@ -30,8 +30,6 @@ contract BookToken is ERC20 {
         teamAmount = initialSupply / 10;
         teamAmount = teamAmount / 5;
         communityAmount = (initialSupply * 9) / 10;
-
-
     }
 
     modifier onlyOwner() {
@@ -59,21 +57,17 @@ contract BookToken is ERC20 {
         mintBookContract = _address;
     }
 
-        //set the address for the book mint contract
+    //set the address for the book mint contract
     function distributeInitial() external onlyOwner {
-        
         _mint(team, teamAmount);
         _mint(teamMember2, teamAmount);
         _mint(teamMember3, teamAmount);
         _mint(teamMember4, teamAmount);
         _mint(teamMember5, teamAmount);
         _mint(dao, communityAmount);
-    
     }
 
-
-
-        //set the address for the book mint contract
+    //set the address for the book mint contract
     function setDaoContract(address _address) external onlyOwner {
         dao = _address;
     }

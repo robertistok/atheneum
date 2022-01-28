@@ -9,8 +9,8 @@ import "./bookToken.sol";
 
 contract MintBook is ERC1155, ERC1155Holder, IERC2981 {
     using Counters for Counters.Counter;
-    address public dao = 0x47b0C27eCD1889C800107Dc8D3a43B9cA2Ca96b8;
-    address public bookToken = 0x5CA94e11D6167268C763F164567Cd08e8F3DB8D0;
+    address public dao;
+    address public bookToken;
     address owner;
 
     Counters.Counter public bookIds;
