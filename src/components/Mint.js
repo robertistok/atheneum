@@ -154,7 +154,7 @@ const Mint = ({ contract, provider }) => {
         />
       </StyledFormControl>
       <Button disabled={loading} type="submit" variant="contained">
-        <CircularProgress size="small" />
+        <CircularProgress size={20} />
         {loading ? (
           <>
             <span>Minting in progress </span>

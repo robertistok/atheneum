@@ -113,7 +113,7 @@ export const mintBookNft = async ({
     await txn.wait();
     resetState();
     setLoading(false);
-    toast("📚 Wow so easy!", {
+    toast("Wow, you minted a book 🎉!", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
