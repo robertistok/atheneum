@@ -39,7 +39,7 @@ export const Navigation = () => {
     >
       <div className={styles.root}>
         <Link to="/">
-          <img src={logo} alt="logo" />
+          <img src={logo} alt="logo" width={130} height={130} />
         </Link>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Typography variant="h2" sx={{ marginLeft: "20px" }}>
