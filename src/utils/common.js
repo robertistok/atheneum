@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
+import addressJson from "../abis/MintBook_address.json";
 
 export async function requestAccount() {
   await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -100,31 +102,53 @@ export const mintBookNft = async ({
   URI,
   price,
   resetState,
+  setLoading,
 }) => {
   try {
     if (!contract) {
       return;
     }
     const value = ethers.utils.parseEther(price.toString());
-    console.log({ quantity, URI, value });
     const txn = await contract.mintABook(quantity, URI, value);
     await txn.wait();
     resetState();
+    setLoading(false);
+    toast("📚 Wow so easy!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const buyBookNft = async (contract, tokenId, price) => {
+export const buyBookNft = async (
+  contract,
+  tokenId,
+  price,
+  setBuyInProgress,
+  setAvailableBooks
+) => {
   try {
     if (!contract) {
       return;
     }
-
+    setBuyInProgress({ [tokenId]: true });
     const txn = await contract.buy(tokenId, {
       value: price,
     });
     await txn.wait();
+    setBuyInProgress({ [tokenId]: false });
+    const updatedNumberOfBooks = await contract.balanceOf(
+      addressJson.address,
+      tokenId
+    );
+    setAvailableBooks(parseInt(updatedNumberOfBooks._hex, 16));
   } catch (error) {
     console.log(error);
   }

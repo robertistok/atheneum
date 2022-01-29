@@ -9,9 +9,12 @@ import {
   InputLabel,
   Input,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 
 import { mintBookNft } from "../utils/common";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const client = new NFTStorage({
   token:
@@ -27,7 +30,7 @@ const initialState = {
   priceInEth: "",
 };
 
-const Mint = ({ contract }) => {
+const Mint = ({ contract, provider }) => {
   const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const { userId } = useAuth();
@@ -49,7 +52,7 @@ const Mint = ({ contract }) => {
       image: formState.coverFile,
       properties: { bookFile: formState.bookFile },
     });
-    setLoading(false);
+    // setLoading(false);
     const url = metadata.url.split("//");
     const URI = `https://ipfs.io/ipfs/${url[1]}`;
     mintBookNft({
@@ -58,6 +61,7 @@ const Mint = ({ contract }) => {
       URI,
       price: formState.priceInEth,
       resetState: () => setFormState(initialState),
+      setLoading: setLoading,
     });
   };
 
@@ -150,8 +154,27 @@ const Mint = ({ contract }) => {
         />
       </StyledFormControl>
       <Button disabled={loading} type="submit" variant="contained">
-        {loading ? "Minting in progress" : "Upload and mint"}
+        <CircularProgress size="small" />
+        {loading ? (
+          <>
+            <span>Minting in progress </span>
+            <CircularProgress size="small" />
+          </>
+        ) : (
+          "Upload and mint"
+        )}
       </Button>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Root>
   ) : (
     <Typography variant="body1">Please connect your wallet first!</Typography>
