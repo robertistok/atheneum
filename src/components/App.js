@@ -5,6 +5,7 @@ import theme from "../styles/theme";
 import Mint from "./Mint";
 import { Main } from "./Main";
 import { Explore } from "./Explore";
+import { Dashboard } from "./Dashboard";
 import { Layout } from "./Layout";
 import {
   updateProviderAndContract,
@@ -36,9 +37,16 @@ const App = () => {
         <Layout currentAccount={currentAccount}>
           <Routes>
             <Route path="/" element={<Main contract={contract} />} />
-            <Route path="/mint" element={<Mint contract={contract} />} />
-            <Route path="/explore" element={<Explore contract={contract} />} />
+            <Route
+              path="/mint"
+              element={<Mint contract={contract} provider={provider} />}
+            />
+            <Route
+              path="/explore"
+              element={<Explore contract={contract} provider={provider} />}
+            />
             <Route path="/mybooks" element={<MyBooks contract={contract} />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </Layout>
       </Router>

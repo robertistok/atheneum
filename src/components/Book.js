@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
-import { Typography, Button } from "@mui/material";
+import { Typography, Button, CircularProgress } from "@mui/material";
 
 import discordIcon from "../assets/discord.png";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import addressJson from "../abis/MintBook_address.json";
 
-export const Book = ({ book, handleBuy, download, discord, type }) => {
+export const Book = ({
+  book,
+  handleBuy,
+  download,
+  discord,
+  type,
+  buyInProgress,
+}) => {
   const { bookDiv, title, button, downloadLink } = useStylesRoot();
-  const { priceEth, numberOfBooks } = book;
+  const { priceEth, numberOfBooks, tokenId, price } = book;
+  const [availableBooks, setAvailableBooks] = useState(numberOfBooks);
 
   return (
     <div className={bookDiv}>
@@ -27,30 +35,48 @@ export const Book = ({ book, handleBuy, download, discord, type }) => {
 
       {type === "market" ? (
         <>
-          {numberOfBooks ? (
+          {availableBooks ? (
             <Typography variant="body2" gutterBottom>
-              {numberOfBooks > 0
-                ? `${numberOfBooks} 📚 available`
-                : "Sold out!!"}
+              {availableBooks > 0 ? (
+                buyInProgress[tokenId] ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  `${availableBooks}  📚 available`
+                )
+              ) : (
+                "Sold out!!"
+              )}
             </Typography>
           ) : null}
           <Button
             variant="outlined"
             size="small"
             className={button}
-            {...(numberOfBooks > 0
+            disabled={buyInProgress[tokenId] || false}
+            {...(availableBooks > 0
               ? {
                   onClick: () =>
-                    handleBuy({ bookId: book.tokenId, price: book.price }),
+                    handleBuy({
+                      bookId: tokenId,
+                      price: price,
+                      setAvailableBooks: setAvailableBooks,
+                    }),
                 }
               : {
                   component: "a",
-                  href: `https://testnets.opensea.io/assets/${addressJson.address}/${book.tokenId}`,
+                  href: `https://testnets.opensea.io/assets/${addressJson.address}/${tokenId}`,
                   target: "_blank",
                 })}
           >
-            {numberOfBooks > 0 ? (
-              <Typography variant="body1">Buy</Typography>
+            {availableBooks > 0 ? (
+              buyInProgress[tokenId] ? (
+                <>
+                  <Typography variant="body1">In progress </Typography>
+                  <CircularProgress size={20} />
+                </>
+              ) : (
+                <Typography variant="body1">Buy</Typography>
+              )
             ) : (
               "Buy it on Opensea"
             )}

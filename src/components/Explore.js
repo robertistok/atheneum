@@ -7,9 +7,10 @@ import addressJson from "../abis/MintBook_address.json";
 
 import { Book } from "./Book";
 
-export const Explore = ({ contract }) => {
+export const Explore = ({ contract, provider }) => {
   const [books, setBooks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [buyInProgress, setBuyInProgress] = React.useState({});
 
   React.useEffect(() => {
     fetchBooks();
@@ -40,8 +41,8 @@ export const Explore = ({ contract }) => {
             try {
               const response = await (await fetch(book.URI)).json();
               const { name, description, properties, image } = response;
-
-              const bookFileUrl = properties.bookFile.split("//");
+              console.log("bookfile", properties.bookFile);
+              const bookFileUrl = properties.bookFile?.split("//");
               const coverUrl = image.split("//");
               return {
                 price: book.price,
@@ -74,8 +75,8 @@ export const Explore = ({ contract }) => {
 
   const { root, explore, wrapper } = useStylesRoot();
 
-  const handleBuy = ({ bookId, price }) => {
-    buyBookNft(contract, bookId, price);
+  const handleBuy = ({ bookId, price, setAvailableBooks }) => {
+    buyBookNft(contract, bookId, price, setBuyInProgress, setAvailableBooks);
   };
 
   if (loading) return <CircularProgress />;
@@ -98,6 +99,7 @@ export const Explore = ({ contract }) => {
                       book={book}
                       download={false}
                       type="market"
+                      buyInProgress={buyInProgress}
                     />
                   ))
                 ) : (
