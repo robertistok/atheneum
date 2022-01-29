@@ -43,7 +43,7 @@ export const Navigation = () => {
         </Link>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Typography variant="h2" sx={{ marginLeft: "20px" }}>
-            Bookstore on chain
+            Books on chain
           </Typography>
         </Link>
       </div>

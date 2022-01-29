@@ -16,7 +16,7 @@ contract BookToken is ERC20 {
     uint256 teamAmount;
     uint256 communityAmount;
 
-    constructor() ERC20("Book", "Book") {
+    constructor() ERC20("BOC", "BOC") {
         owner = msg.sender;
         //mint initial supply
         initialSupply = 500000000 ether;
